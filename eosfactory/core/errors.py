@@ -1,18 +1,11 @@
 import re
-import sys
-import inspect
-
-import eosfactory.core.logger as logger
-import eosfactory.core.interface as interface
-from typing_extensions import Protocol
 from typing import cast, Match
 
+import eosfactory.core.interface as interface
+import eosfactory.core.logger as logger
 
-class Omittable(Protocol):
-    err_msg: str
 
-
-def validate(omittable: Omittable):
+def validate(omittable: interface.Omittable):
     '''Throw exception if validation fails.
     '''
     err_msg = omittable.err_msg
@@ -25,6 +18,7 @@ def validate(omittable: Omittable):
         def extract_bytes(regex: str):
             return int(cast(Match[str], re.search(
                 regex, err_msg)).group(1))
+
         needs = extract_bytes('needs\s(.*)\sbytes\shas')
         has = extract_bytes('bytes\shas\s(.*)\sbytes')
 
@@ -43,6 +37,8 @@ def validate(omittable: Omittable):
         raise MissingRequiredAuthorityError(err_msg)
     elif "Duplicate transaction" in err_msg:
         raise DuplicateTransactionError(err_msg)
+    elif "Error 3050003" in err_msg:
+        raise EOSIOAssertionError(err_msg)
 
     #######################################################################
     # NOT ERRORS
@@ -70,42 +66,42 @@ class AccountDoesNotExistError(Error):
         account: account argument: an ``Account`` object or account name.
     '''
 
-    def __init__(self, account: Omittable):
+    def __init__(self, account: interface.Omittable):
         self.account = account
         Error.__init__(
             self,
             "Account ``{}`` does not exist in the blockchain."
-            .format(interface.account_arg(account)),
+                .format(interface.account_arg(account)),
             True)
 
 
 class WalletDoesNotExistError(Error):
-    def __init__(self, wallet: Omittable):
+    def __init__(self, wallet: interface.Omittable):
         self.wallet = wallet
         Error.__init__(
             self,
             "Wallet ``{}`` does not exist."
-            .format(interface.wallet_arg(wallet)),
+                .format(interface.wallet_arg(wallet)),
             True)
 
 
 class WalletAlreadyExistsError(Error):
-    def __init__(self, wallet: Omittable):
+    def __init__(self, wallet: interface.Omittable):
         self.wallet = wallet
         Error.__init__(
             self,
             "Wallet ``{}`` already exists."
-            .format(interface.wallet_arg(wallet)),
+                .format(interface.wallet_arg(wallet)),
             True)
 
 
 class InvalidPasswordError(Error):
-    def __init__(self, wallet: Omittable):
+    def __init__(self, wallet: interface.Omittable):
         self.wallet = wallet
         Error.__init__(
             self,
             "Invalid password for wallet {}"
-            .format(interface.wallet_arg(wallet)),
+                .format(interface.wallet_arg(wallet)),
             True)
 
 
@@ -124,7 +120,7 @@ class LowRamError(Error):
         Error.__init__(
             self,
             "RAM needed is {}kB, deficiency is {}kB."
-            .format(self.needs_kbyte, self.deficiency_kbyte),
+                .format(self.needs_kbyte, self.deficiency_kbyte),
             True)
 
 
@@ -135,6 +131,12 @@ class MissingRequiredAuthorityError(Error):
 
 
 class DuplicateTransactionError(Error):
+    def __init__(self, message: str):
+        Error.__init__(
+            self, message, True)
+
+
+class EOSIOAssertionError(Error):
     def __init__(self, message: str):
         Error.__init__(
             self, message, True)

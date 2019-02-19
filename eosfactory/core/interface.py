@@ -1,10 +1,12 @@
 import enum
+from typing_extensions import Protocol
 
-class Omittable:
+
+class Omittable(Protocol):
     '''Having the *err_msg* attribute.
     '''
-    def __init__(self):
-        self.err_msg = None
+    err_msg: str
+
 
 class Permission(enum.Enum):
     '''Enumeration {OWNER, ACTIVE}
@@ -23,7 +25,8 @@ class Key(Omittable):
     Attributes:
         key_public (str): The public key of a key pair.
         key_private (str): The private key of a key pair.
-    '''    
+    '''
+
     def __init__(self, key_public, key_private):
         self.key_public = key_public
         self.key_private = key_private
@@ -37,18 +40,19 @@ class Account(Omittable):
         name (str): EOSIO contract name
         owner_key (str or .Key): The owner key of the account.
         active_key (str or .Key): The account key of the account.
-    
+
     Attributes:
         name (str): EOSIO contract name
         owner_key (str or .Key): The owner key of the account.
         active_key (str or .Key): The account key of the account.
-    '''    
+    '''
+
     def __init__(self, name, owner_key=None, active_key=None):
         self.name = name
         self.owner_key = owner_key
         self.active_key = active_key
         Omittable.__init__(self)
-    
+
     def owner(self):
         '''Get the public owner key
 
@@ -65,11 +69,11 @@ class Account(Omittable):
 
         Returns:
             str: public active key
-        '''        
+        '''
         if isinstance(self.active_key, Key):
             return self.active_key.key_public
         else:
-            return self.active_key    
+            return self.active_key
 
 
 class Wallet(Omittable):
@@ -82,7 +86,8 @@ class Wallet(Omittable):
     Attributes:
         name (str): The wallet name.
         password (str): The password to the wallet.    
-    '''    
+    '''
+
     def __init__(self, name, password=None):
         self.name = name
         self.password = password
@@ -164,7 +169,7 @@ def permission_arg(permission):
     Args:
     :param permission (.interface.Account or str or (str, str) or \
         (.interface.Account, str) or any list of the previous items): The *permission* argument.
-        
+
     Exemplary values of the argument *permission*::
 
         eosio # eosio is an interface.Account object
@@ -174,7 +179,7 @@ def permission_arg(permission):
         perm_tuple = ("eosio", "owner")
 
         perm_tuple = (eosio, interface.Permission.ACTIVE)
-        
+
         perm_list = ["eosio@owner", (eosio, .Permission.ACTIVE)]
 
     Returns:
@@ -213,4 +218,3 @@ def permission_arg(permission):
             p = permission_arg(permission.pop())
             retval.append(p[0])
         return retval
-
