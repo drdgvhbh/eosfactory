@@ -12,17 +12,18 @@ import eosfactory.shell.account as account
 import eosfactory.shell.contract as contract
 
 
-verbosity =  logger.verbosity
-Verbosity =  logger.Verbosity
+verbosity = logger.verbosity
+Verbosity = logger.Verbosity
 
-SCENARIO =  logger.SCENARIO
-COMMENT =  logger.COMMENT
-TRACE =  logger.TRACE
-INFO =  logger.INFO
-OUT =  logger.OUT
-DEBUG =  logger.DEBUG
+SCENARIO = logger.SCENARIO
+COMMENT = logger.COMMENT
+TRACE = logger.TRACE
+INFO = logger.INFO
+OUT = logger.OUT
+DEBUG = logger.DEBUG
 
 Error = errors.Error
+EOSIOAssertionError = errors.EOSIOAssertionError
 LowRamError = errors.LowRamError
 MissingRequiredAuthorityError = errors.MissingRequiredAuthorityError
 DuplicateTransactionError = errors.DuplicateTransactionError
@@ -50,6 +51,6 @@ stop = manager.stop
 info = manager.info
 status = manager.status
 
-Testnet =  testnet.Testnet
-get_testnet =  testnet.get_testnet
-testnets =  testnet.testnets
+Testnet = testnet.Testnet
+get_testnet = testnet.get_testnet
+testnets = testnet.testnets

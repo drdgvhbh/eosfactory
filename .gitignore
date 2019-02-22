@@ -48,3 +48,7 @@ docs/patterns/*.py
 docs/patterns/set/*.py
 hyper.md
 test.py
+
+*\.mypy_cache/
+
+\.idea/

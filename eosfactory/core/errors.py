@@ -71,7 +71,7 @@ class AccountDoesNotExistError(Error):
         Error.__init__(
             self,
             "Account ``{}`` does not exist in the blockchain."
-                .format(interface.account_arg(account)),
+            .format(interface.account_arg(account)),
             True)
 
 
@@ -81,7 +81,7 @@ class WalletDoesNotExistError(Error):
         Error.__init__(
             self,
             "Wallet ``{}`` does not exist."
-                .format(interface.wallet_arg(wallet)),
+            .format(interface.wallet_arg(wallet)),
             True)
 
 
@@ -91,7 +91,7 @@ class WalletAlreadyExistsError(Error):
         Error.__init__(
             self,
             "Wallet ``{}`` already exists."
-                .format(interface.wallet_arg(wallet)),
+            .format(interface.wallet_arg(wallet)),
             True)
 
 
@@ -101,7 +101,7 @@ class InvalidPasswordError(Error):
         Error.__init__(
             self,
             "Invalid password for wallet {}"
-                .format(interface.wallet_arg(wallet)),
+            .format(interface.wallet_arg(wallet)),
             True)
 
 
@@ -120,7 +120,7 @@ class LowRamError(Error):
         Error.__init__(
             self,
             "RAM needed is {}kB, deficiency is {}kB."
-                .format(self.needs_kbyte, self.deficiency_kbyte),
+            .format(self.needs_kbyte, self.deficiency_kbyte),
             True)
 
 
